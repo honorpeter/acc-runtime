@@ -33,7 +33,7 @@
 #include <fpga_mgmt.h>
 #include <utils/lcd.h>
 
-#include "../inference_net_hls/config.h"
+#include "../inference_host/acc_mem_config.h"
 
 using namespace std;
 
@@ -41,46 +41,6 @@ typedef struct {
     uint32_t ctrl_bus_baseaddress;
     uint32_t IsReady;
 } XInference_net;
-
-/*
- * pci_vendor_id and pci_device_id values below are Amazon's and avaliable to use for a given FPGA slot. 
- * Users may replace these with their own if allocated to them by PCI SIG
- */
-static uint16_t pci_vendor_id = 0x1D0F; /* Amazon PCI Vendor ID */
-static uint16_t pci_device_id = 0xF000; /* PCI Device ID preassigned by Amazon for F1 applications */
-
-#define HELLO_WORLD_REG_ADDR UINT64_C(0x0)
-
-#define DDR_SH_ADDR UINT64_C(0xE01000000)
-#define DDR_B_ADDR UINT64_C(0xD02000000)
-#define DDR_A_ADDR UINT64_C(0xC02000000)
-
-#define HELLO_WORLD_REG_ADDR_CONTROL UINT64_C(0x00)
-#define HELLO_WORLD_REG_ADDR_STATUS UINT64_C(0x04)
-
-#define HELLO_WORLD_REG_ADDR_SRC_MSB_ADDR UINT64_C(0x1C)
-#define HELLO_WORLD_REG_ADDR_DST_MSB_ADDR UINT64_C(0x24)
-
-#define HELLO_WORLD_REG_ADDR_SRC_ADDR UINT64_C(0x18)
-#define HELLO_WORLD_REG_ADDR_DST_ADDR UINT64_C(0x20)
-#define HELLO_WORLD_REG_ADDR_BYTES UINT64_C(0x28)
-
- // M_AXI_BAR1 connected to inference control port
-#define XINFERENCE_IP_CRTL_BUS_ADDR_1 UINT64_C(0x010000)
-#define XINFERENCE_IP_CRTL_BUS_ADDR_2 UINT64_C(0x020000)
-
-#define XINFERENCE_NET_CRTL_BUS_ADDR_AP_CTRL UINT64_C(0x0)
-#define XINFERENCE_NET_CRTL_BUS_ADDR_GIE UINT64_C(0x4)
-#define XINFERENCE_NET_CRTL_BUS_ADDR_IER UINT64_C(0x8)
-#define XINFERENCE_NET_CRTL_BUS_ADDR_ISR UINT64_C(0xc)
-
-/* pci_bar_handle_t is a handler for an address space exposed by one PCI BAR on one of the PCI PFs of the FPGA */
-
-    pci_bar_handle_t pci_bar_handle = PCI_BAR_HANDLE_INIT;
-    pci_bar_handle_t pci_bar_handle_0 = PCI_BAR_HANDLE_INIT;
-    pci_bar_handle_t pci_bar_handle_4 = PCI_BAR_HANDLE_INIT;
-
-    pci_bar_handle_t pci_bar_handle_sda = PCI_BAR_HANDLE_INIT;
 
 /* Declaring the local functions */
 int peek_poke_example(int slot, int pf_id, int bar_id);
