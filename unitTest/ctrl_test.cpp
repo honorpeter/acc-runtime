@@ -60,7 +60,7 @@ int example(int slot_id, int pf_id, int bar_id) {
     int status;
     int loop_var = 0;
 
-    uint64_t test_addr[3] = { CONV_CORE_PARAM, POOL_CORE_PARAM, CONV_B_BRAM_PCIS };
+    uint64_t test_addr[3] = { CONV_B_BRAM_PCIS, CONV_CORE_PARAM, POOL_CORE_PARAM };
     int rc_4;
 
     int *write_buffer, *read_buffer;

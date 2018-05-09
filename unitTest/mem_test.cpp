@@ -121,7 +121,7 @@ int example(int slot_id, int pf_id, int bar_id) {
 
     uint64_t start_addr = CONV_W_BRAM_PCIS_0_0;
     uint64_t block_size = 0x00001000;
-    uint64_t end_addr = CONV_W_BRAM_PCIS_0_5;
+    uint64_t end_addr = CONV_W_BRAM_PCIS_0_7;
     uint64_t tmp_addr = start_addr;
 
     int rc_4;
