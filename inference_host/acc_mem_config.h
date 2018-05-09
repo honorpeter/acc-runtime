@@ -31,7 +31,7 @@ static uint16_t pci_device_id = 0xF000; /* PCI Device ID preassigned by Amazon f
 #define HELLO_WORLD_REG_ADDR_BYTES UINT64_C(0x28)
 
 // M_AXI_BAR1 connected to inference control port
-#define XINFERENCE_IP_CRTL_BUS_ADDR_1 UINT64_C(0x010000)
+#define XINFERENCE_IP_CRTL_BUS_ADDR_1 UINT64_C(0x040000)
 #define XINFERENCE_IP_CRTL_BUS_ADDR_2 UINT64_C(0x020000)
 
 #define XINFERENCE_NET_CRTL_BUS_ADDR_AP_CTRL UINT64_C(0x0)
