@@ -78,6 +78,10 @@ static uint16_t pci_device_id = 0xF000; /* PCI Device ID preassigned by Amazon f
 
 #define HELLO_WORLD_REG_ADDR UINT64_C(0x0)
 
+#define ACC_0_CTRL_PORT UINT64_C(0x010000)
+#define ACC_1_CTRL_PORT UINT64_C(0x020000)
+#define ACC_2_CTRL_PORT UINT64_C(0x030000)
+
 #define DDR_SH_ADDR UINT64_C(0xE01000000)
 #define DDR_B_ADDR UINT64_C(0xD02000000)
 #define DDR_A_ADDR UINT64_C(0xC02000000)
