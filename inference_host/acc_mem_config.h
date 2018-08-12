@@ -1,7 +1,10 @@
 
-#ifndef _ACC_CONFIG_H_
-#define _ACC_CONFIG_H_
+#ifndef _ACC_MEM_CONFIG_H_
+#define _ACC_MEM_CONFIG_H_
 
+
+#define ACC_NUM 3
+char acc_type[ACC_NUM] = {'CONV', 'CONV', 'FC'};
 
 typedef float data_type;
 typedef float data_type_w;
@@ -64,15 +67,6 @@ int nn_out_number_fc[1] = {10};
 int nn_channel_size_fc[1] = {5};
 
 
-/* Constants determined by the CL */
-/* a set of register offsets; this CL has only one */
-/* these register addresses should match the addresses in */
-/* /aws-fpga/hdk/cl/examples/common/cl_common_defines.vh */
-
-/*
- * pci_vendor_id and pci_device_id values below are Amazon's and avaliable to use for a given FPGA slot.
- * Users may replace these with their own if allocated to them by PCI SIG
- */
 static uint16_t pci_vendor_id = 0x1D0F; /* Amazon PCI Vendor ID */
 static uint16_t pci_device_id = 0xF000; /* PCI Device ID preassigned by Amazon for F1 applications */
 

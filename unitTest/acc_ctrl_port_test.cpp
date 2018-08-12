@@ -1,10 +1,13 @@
-//
+//------------- Rights to yao.chen@adsc-create.edu.sg-------------------//
 // Created by yaochen on 9/4/18.
 //
+// This file is used to test the port status of the accelerators 
+// Including: 1) acc ctrl port initial status read and print
+//            2) acc computation start and stop status check and verify
+//
+//------------- Rights to yao.chen@adsc-create.edu.sg-------------------//
 
-
-/*TODO: Add the header files here*/
-// Note: only add the required files here
+// TODO: simplify header files
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -16,46 +19,7 @@
 #include "../inference_host/inference_func.h"
 #include "../inference_host/acc_mem_config.h"
 
-/* TODO: complete all this functions and pack them as unitTest APIs */
-// weight/input/output memory test function
-int acc_ctrl_test(pci_bar_handle_t pci_bar, uint64_t BRAM_ADDRESS, int *write_data, int *read_data, int length){
-    
-    int loop_var=0;
-    int flag=1;
-
-    Fill_param(pci_bar, BRAM_ADDRESS, write_data, length);
-    Read_param(pci_bar, BRAM_ADDRESS, read_data, length);
-
-    while (loop_var < length) {
-        if (write_data[loop_var] == read_data[loop_var]) {
-        	flag = 1;
-        } else {
-        	flag = 0;
-            break;
-        }
-        loop_var ++ ;
-    }
-    
-    printf("Bytes written:\n");
-    
-    for (int i = 0; i < length; ++i) {
-        cout << write_data[i] << " " ;
-    }
-    
-    printf("\n\n");
-    
-    printf("Bytes read:\n");
-    
-    for (int i = 0; i < length; ++i) {
-        cout << read_data[i] << " ";
-    }
-    
-    printf("\n\n");
-    
-    return flag;
-}
-
-int example(int slot_id, int pf_id, int bar_id) {
+int acc_ctrl_test(int slot_id, int pf_id, int bar_id) {
     
     int status;
     int loop_var = 0;
@@ -77,13 +41,25 @@ int example(int slot_id, int pf_id, int bar_id) {
     rc_4 = fpga_pci_attach(slot_id, pf_id, 4, 0, &pci_bar_handle_4);
     fail_on(rc_4, out, "Unable to attach to the AFI on slot id %d", slot_id);
 
+    /*Read the accelerator control port register status and show in terminal*/
     uint32_t port_status[3];
     port_status[0] = XInference_net_ReadReg(pci_bar_handle_4, test_addr[0], 0);
     port_status[1] = XInference_net_ReadReg(pci_bar_handle_4, test_addr[1], 0);
     port_status[2] = XInference_net_ReadReg(pci_bar_handle_4, test_addr[2], 0);
+    
     for (uint32_t i = 0; i < 3; i++) {
-	cout << "Returned acc_" <<i<<" ctrl_port status = " << port_status[i] << endl;
+	   cout << "Returned acc_" <<i<<" ctrl_port status = " << port_status[i] << endl;
+       if (port_status[i] == 0x00) {cout << "acc" << i << "port check SUCCESS!" << endl;}
+       else {cout << "acc" << i << "port check Failure!" << endl;}
     }
+
+    uint32_t acc_status[3];
+    for (uint32_t i = 0; i < 3; i++) {
+        XInference_net_Start(pci_bar_handle_4, Acc_ptr[i]);
+        while (!XInference_net_IsDone(pci_bar_handle_4, Acc_ptr[i])) { ; }
+        cout << "Acc_" << [i] << " Idling Test SUCCESS!!" << endl; 
+    }
+
 out:
     /* clean up */
     if (pci_bar_handle_4 >= 0) {
@@ -114,9 +90,17 @@ int main(int argc, char** argv) {
     /* Accessing the CL registers via AppPF BAR0, which maps to sh_cl_ocl_ AXI-Lite bus between AWS FPGA Shell and the CL*/
     printf("\n");
 
-    printf("=====Acc CTRL PORT TEST =====\n");   
+    printf("=====Accelerators CTRL PORT TEST =====\n");   
 
-    rc = example(slot_id, FPGA_APP_PF, APP_PF_BAR1);
+    XInference_net Acc_ptr[ACC_NUM];
+    Acc_ptr[0].ctrl_bus_baseaddress = ACC_0_CTRL_PORT;
+    Acc_ptr[0].IsReady = 0x01;
+    Acc_ptr[1].ctrl_bus_baseaddress = ACC_1_CTRL_PORT;
+    Acc_ptr[1].IsReady = 0x01;
+    Acc_ptr[2].ctrl_bus_baseaddress = ACC_2_CTRL_PORT;
+    Acc_ptr[2].IsReady = 0x01;
+
+    rc = acc_ctrl_test(slot_id, FPGA_APP_PF, APP_PF_BAR1);
     fail_on(rc, out, "CTRL TEST failed");
   
     return rc; 
