@@ -19,7 +19,7 @@
 #include "../inference_host/inference_func.h"
 #include "../inference_host/acc_mem_config.h"
 
-int acc_ctrl_test(XInference_net *Acc_ptr, int slot_id, int pf_id, int bar_id) {
+int acc_ctrl_test(XInference_net *Ptr, int slot_id, int pf_id, int bar_id) {
     
     int status;
     int loop_var = 0;
@@ -55,9 +55,10 @@ int acc_ctrl_test(XInference_net *Acc_ptr, int slot_id, int pf_id, int bar_id) {
 
     uint32_t acc_status[3];
     for (uint32_t i = 0; i < 3; i++) {
-        XInference_net_Start(pci_bar_handle_4, Acc_ptr[i]);
-        while (!XInference_net_IsDone(pci_bar_handle_4, Acc_ptr[i])) { ; }
-        cout << "Acc_" << [i] << " Idling Test SUCCESS!!" << endl; 
+        XInference_net_Start(pci_bar_handle_4, Ptr);
+        while (!XInference_net_IsDone(pci_bar_handle_4, Ptr)) { ; }
+//        cout << "Acc_[" << i << "] Idling Test SUCCESS!!" << endl;
+        cout << "Acc_0 test time " << i << "  --> SUCCESS !" << endl;
     }
 
 out:
@@ -92,16 +93,16 @@ int main(int argc, char** argv) {
 
     printf("=====Accelerators CTRL PORT TEST =====\n");   
 
-    XInference_net Acc_ptr[ACC_NUM];
+    XInference_net Acc_ptr_0;
 
-    Acc_ptr[0].ctrl_bus_baseaddress = ACC_0_CTRL_PORT;
-    Acc_ptr[0].IsReady = 0x01;
-    Acc_ptr[1].ctrl_bus_baseaddress = ACC_1_CTRL_PORT;
-    Acc_ptr[1].IsReady = 0x01;
-    Acc_ptr[2].ctrl_bus_baseaddress = ACC_2_CTRL_PORT;
-    Acc_ptr[2].IsReady = 0x01;
+    Acc_ptr_0.ctrl_bus_baseaddress = ACC_0_CTRL_PORT;
+    Acc_ptr_0.IsReady = 0x01;
+//    Acc_ptr[1].ctrl_bus_baseaddress = ACC_1_CTRL_PORT;
+//    Acc_ptr[1].IsReady = 0x01;
+//    Acc_ptr[2].ctrl_bus_baseaddress = ACC_2_CTRL_PORT;
+//    Acc_ptr[2].IsReady = 0x01;
 
-    rc = acc_ctrl_test(Acc_ptr, lot_id, FPGA_APP_PF, APP_PF_BAR1);
+    rc = acc_ctrl_test(lot_id, FPGA_APP_PF, APP_PF_BAR1);
     fail_on(rc, out, "CTRL TEST failed");
   
     return rc; 
