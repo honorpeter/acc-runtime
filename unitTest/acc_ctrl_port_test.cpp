@@ -102,7 +102,7 @@ int main(int argc, char** argv) {
 //    Acc_ptr[2].ctrl_bus_baseaddress = ACC_2_CTRL_PORT;
 //    Acc_ptr[2].IsReady = 0x01;
 
-    rc = acc_ctrl_test(lot_id, FPGA_APP_PF, APP_PF_BAR1);
+    rc = acc_ctrl_test(*Acc_ptr_0, slot_id, FPGA_APP_PF, APP_PF_BAR1);
     fail_on(rc, out, "CTRL TEST failed");
   
     return rc; 
