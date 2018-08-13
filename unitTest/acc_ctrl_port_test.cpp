@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
 
     rc = check_afi_ready(slot_id);
     fail_on(rc, out, "AFI not ready");
-    
+
     /* Accessing the CL registers via AppPF BAR0, which maps to sh_cl_ocl_ AXI-Lite bus between AWS FPGA Shell and the CL*/
     printf("\n");
 
