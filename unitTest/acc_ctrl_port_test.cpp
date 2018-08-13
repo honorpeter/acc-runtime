@@ -19,7 +19,7 @@
 #include "../inference_host/inference_func.h"
 #include "../inference_host/acc_mem_config.h"
 
-int acc_ctrl_test(XInference_net Acc_ptr[ACC_NUM], int slot_id, int pf_id, int bar_id) {
+int acc_ctrl_test(XInference_net *Acc_ptr, int slot_id, int pf_id, int bar_id) {
     
     int status;
     int loop_var = 0;
@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
     Acc_ptr[2].ctrl_bus_baseaddress = ACC_2_CTRL_PORT;
     Acc_ptr[2].IsReady = 0x01;
 
-    rc = acc_ctrl_test(XInference_net Acc_ptr[ACC_NUM], lot_id, FPGA_APP_PF, APP_PF_BAR1);
+    rc = acc_ctrl_test(Acc_ptr, lot_id, FPGA_APP_PF, APP_PF_BAR1);
     fail_on(rc, out, "CTRL TEST failed");
   
     return rc; 
