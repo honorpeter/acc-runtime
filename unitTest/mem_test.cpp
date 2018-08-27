@@ -116,18 +116,18 @@ out:
 */
 int acc_mem_test(int slot_id, int pf_id, int bar_id) {
     
-    int error_num;
+    int error_num = 0;
     int addr_num = 0;
 
-    uint64_t start_addr = CONV_W_BRAM_PCIS_0_0;
-    uint64_t block_size = 0x00001000;
-    uint64_t end_addr = CONV_W_BRAM_PCIS_0_7;
-    uint64_t tmp_addr = start_addr;
+    //uint64_t start_addr = CONV_W_BRAM_PCIS_0_0;
+    //uint64_t block_size = 0x00001000;
+    //uint64_t end_addr = CONV_W_BRAM_PCIS_0_7;
+    //uint64_t tmp_addr = start_addr;
 
     int rc_4;
 
     int fd, rc1;
-    char device_file_name[256];
+//    char device_file_name[256];
     float *write_buffer, *read_buffer;
     static const size_t buffer_size = 8192;
     read_buffer = NULL;
@@ -154,15 +154,15 @@ int acc_mem_test(int slot_id, int pf_id, int bar_id) {
     /* initialize the fpga_plat library */
     rc1 = fpga_mgmt_init();
     fail_on(rc1, out, "Unable to initialize the fpga_mgmt library");
-
+/*
     rc1 = sprintf(device_file_name, "/dev/edma%i_queue_0", slot_id);
     fail_on((rc1 = (rc1 < 0) ? 1 : 0), out, "Unable to format device file name.");
     printf("device_file_name=%s\n", device_file_name);
-
+*/
     /* make sure the AFI is loaded and ready */
     rc1 = check_slot_config(slot_id);
     fail_on(rc1, out, "slot config is not correct");
-
+/*
     fd = open(device_file_name, O_RDWR);
 
     if (fd < 0) {
@@ -176,7 +176,7 @@ int acc_mem_test(int slot_id, int pf_id, int bar_id) {
                device_file_name);
         fail_on((rc1 = (fd < 0) ? 1 : 0), out, "unable to open DMA queue. ");
     }
-
+*/
     write_buffer = (float *) malloc (buffer_size * sizeof(float));
     read_buffer = (float *) malloc (buffer_size * sizeof(float));
 
@@ -188,24 +188,35 @@ int acc_mem_test(int slot_id, int pf_id, int bar_id) {
     for (int i = 0; i < buffer_size; i++) {
         write_buffer[i] = 1.1;
     }
-
+/*
     while (tmp_addr <= end_addr) {
         tmp_addr += block_size;
         addr_num++;
     }
-
+*/
 //    error_num = acc_mem_test(rc1, fd, start_addr, write_buffer, read_buffer, buffer_size, addr_num);
 
-    Fill_Bram(pci_bar_handle, O_BANK_0_0, write_buffer, buffer_size);
-    Read_Bram(pci_bar_handle, O_BANK_0_0, read_buffer, buffer_size);
+    Fill_Bram(pci_bar_handle_4, O_BANK_0_5, write_buffer, buffer_size);
+    Read_Bram(pci_bar_handle_4, O_BANK_0_5, read_buffer, buffer_size);
 
-    for (int i = 0; i<buffer_size; i++){
+    for (int i = 0; i < buffer_size; i++){
         if (write_buffer[i] != read_buffer[i]){
             error_num++;
         } else {
             ;
         }
     }
+/*
+   for (int i = 0; i < buffer_size; i++){
+      cout << write_buffer[i] << " ";
+   }
+   cout << endl;
+   cout << endl;
+   for (int i = 0; i < buffer_size; i++){
+       cout << read_buffer[i] << " ";
+   }
+   cout << endl;
+*/
 
     if (error_num == 0) {
         cout << "test " << addr_num << " addresses" << endl;

@@ -22,14 +22,14 @@ CFLAGS = -DCONFIG_LOGLEVEL=4 -std=c++0x -g -Wall $(INCLUDES)
 LDLIBS = -lfpga_mgmt -lrt -lpthread
 
 #SRC = ./unitTest/ctrl_test.cpp
-#SRC = ./unitTest/mem_test.cpp
+SRC = ./unitTest/mem_test.cpp
 #SRC = ./modelTest/test_lenet.cpp
-SRC = ./unitTest/acc_ctrl_port_test.cpp
+#SRC = ./unitTest/acc_ctrl_port_test.cpp
 OBJ = $(SRC:.c=.o)
 #BIN = ctrl_test
-#BIN = mem_test
+BIN = mem_test
 #BIN = test_lenet
-BIN = acc_ctrl_port_test
+#BIN = acc_ctrl_port_test
 
 all: check_env $(BIN)
 
