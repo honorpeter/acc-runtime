@@ -86,12 +86,22 @@ int acc_ctrl_test(int slot_id, int pf_id, int bar_id) {
 
     uint32_t acc_status[3];
 
-    for (uint32_t i = 0; i < 3; i++) {
+//    for (uint32_t i = 0; i < 3; i++) {
         XInference_net_Start(pci_bar_handle, &Acc_ptr_0);
         while (!XInference_net_IsDone(pci_bar_handle, &Acc_ptr_0)) { ; }
 //        cout << "Acc_[" << i << "] Idling Test SUCCESS!!" << endl;
-        cout << "Acc_0 test time " << i << "  --> SUCCESS !" << endl;
-    }
+        cout << "Acc_0 test time   --> SUCCESS !" << endl;
+
+        XInference_net_Start(pci_bar_handle, &Acc_ptr_1);
+        while (!XInference_net_IsDone(pci_bar_handle, &Acc_ptr_1)) { ; }
+//        cout << "Acc_[" << i << "] Idling Test SUCCESS!!" << endl;
+        cout << "Acc_1 test time   --> SUCCESS !" << endl;
+
+        XInference_net_Start(pci_bar_handle, &Acc_ptr_2);
+        while (!XInference_net_IsDone(pci_bar_handle, &Acc_ptr_2)) { ; }
+//        cout << "Acc_[" << i << "] Idling Test SUCCESS!!" << endl;
+        cout << "Acc_2 test time   --> SUCCESS !" << endl;
+//    }
 
     
 
