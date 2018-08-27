@@ -25,8 +25,8 @@ const struct logger *logger = &logger_stdout;
 //int acc_mem_test(uint64_t startAddress, uint64_t stepLength, uint64_t endAddress);
 // control & parameter input register memory test function
 //int acc_mem_test(uint64_t startAddress, uint64_t stepLength);
-
-int acc_mem_test(int rc, int fd, uint64_t BRAM_ADDRESS, float *write_data, float *read_data,
+/*
+int acc_mem_test_dma(int rc, int fd, uint64_t BRAM_ADDRESS, float *write_data, float *read_data,
                  int buffer_size, int count) {
     
     int error_num = 0;
@@ -113,8 +113,8 @@ out:
 
     return error_num;
 }
-
-int example(int slot_id, int pf_id, int bar_id) {
+*/
+int acc_mem_test(int slot_id, int pf_id, int bar_id) {
     
     int error_num;
     int addr_num = 0;
@@ -129,7 +129,7 @@ int example(int slot_id, int pf_id, int bar_id) {
     int fd, rc1;
     char device_file_name[256];
     float *write_buffer, *read_buffer;
-    static const size_t buffer_size = 1024;
+    static const size_t buffer_size = 8192;
     read_buffer = NULL;
     write_buffer = NULL;
     fd = -1;
@@ -194,7 +194,18 @@ int example(int slot_id, int pf_id, int bar_id) {
         addr_num++;
     }
 
-    error_num = acc_mem_test(rc1, fd, start_addr, write_buffer, read_buffer, buffer_size, addr_num);
+//    error_num = acc_mem_test(rc1, fd, start_addr, write_buffer, read_buffer, buffer_size, addr_num);
+
+    Fill_Bram(pci_bar_handle, O_BANK_0_0, write_buffer, buffer_size);
+    Read_Bram(pci_bar_handle, O_BANK_0_0, read_buffer, buffer_size);
+
+    for (int i = 0; i<buffer_size; i++){
+        if (write_buffer[i] != read_buffer[i]){
+            error_num++;
+        } else {
+            ;
+        }
+    }
 
     if (error_num == 0) {
         cout << "test " << addr_num << " addresses" << endl;
@@ -240,7 +251,7 @@ int main(int argc, char **argv) {
 
     printf("===== MEM TEST =====\n");
 
-    rc = example(slot_id, FPGA_APP_PF, APP_PF_BAR1);
+    rc = acc_mem_test(slot_id, FPGA_APP_PF, APP_PF_BAR1);
     fail_on(rc, out, "MEM TEST failed");
 
     return rc;
