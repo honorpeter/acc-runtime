@@ -4,7 +4,7 @@
 
 
 #define ACC_NUM 3
-char acc_type[ACC_NUM] = {'CONV', 'CONV', 'FC'};
+//char acc_type[ACC_NUM] = {'CONV', 'CONV', 'FC'};
 
 typedef float data_type;
 typedef float data_type_w;
